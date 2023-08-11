@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:listview_example/sub/firstPage.dart';
 import 'package:listview_example/sub/secondPage.dart';
@@ -60,10 +59,10 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     controller?.addListener(() {
       if (!controller!.indexIsChanging) {
-        if (kDebugMode) {
-          print("이전 인덱스: ${controller?.previousIndex}");
-          print("현재 인덱스: ${controller?.index}");
-        }
+        // if (kDebugMode) {
+        //   print("이전 인덱스: ${controller?.previousIndex}");
+        //   print("현재 인덱스: ${controller?.index}");
+        // }
       }
     });
 
