@@ -1,4 +1,4 @@
-name: listview_example
+name: mintb_sample
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -88,13 +88,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-  assets:
-    - repo/images/bee.png
-    - repo/images/cat.png
-    - repo/images/cow.png
-    - repo/images/dog.png
-    - repo/images/fox.png
-    - repo/images/monkey.png
-    - repo/images/pig.png
-    - repo/images/wolf.png
