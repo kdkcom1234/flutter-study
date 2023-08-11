@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:listview_example/animalItem.dart';
 
 class SecondPage extends StatefulWidget {
-  const SecondPage({super.key});
+  final List<Animal>? list;
+  const SecondPage({Key? key, this.list}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +19,22 @@ class _SecondPageState extends State<SecondPage> {
 
   @override
   Widget build(BuildContext context) {
-    _radioChange(int? value) {}
+    _radioChange(int? value) {
+      setState(() {
+        _radioValue = value;
+      });
+    }
+
+    getKind(int? radioValue) {
+      switch (radioValue) {
+        case 0:
+          return "양서류";
+        case 1:
+          return "파충류";
+        case 2:
+          return "포유류";
+      }
+    }
 
     // TODO: implement build
     return Scaffold(
@@ -64,48 +81,106 @@ class _SecondPageState extends State<SecondPage> {
                       })
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    child: Image.asset(
-                      'repo/images/cow.png',
-                      width: 80,
+              Container(
+                height: 100,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    GestureDetector(
+                      child: Image.asset(
+                        'repo/images/cow.png',
+                        width: 80,
+                      ),
+                      onTap: () {
+                        _imagePath = "repo/images/cow.png";
+                      },
                     ),
-                    onTap: () {
-                      _imagePath = "repo/images/cow.png";
-                    },
-                  ),
-                  GestureDetector(
-                    child: Image.asset(
-                      'repo/images/pig.png',
-                      width: 80,
+                    GestureDetector(
+                      child: Image.asset(
+                        'repo/images/pig.png',
+                        width: 80,
+                      ),
+                      onTap: () {
+                        _imagePath = "repo/images/pig.png";
+                      },
                     ),
-                    onTap: () {
-                      _imagePath = "repo/images/pig.png";
-                    },
-                  ),
-                  GestureDetector(
-                    child: Image.asset(
-                      'repo/images/bee.png',
-                      width: 80,
+                    GestureDetector(
+                      child: Image.asset(
+                        'repo/images/bee.png',
+                        width: 80,
+                      ),
+                      onTap: () {
+                        _imagePath = "repo/images/bee.png";
+                      },
                     ),
-                    onTap: () {
-                      _imagePath = "repo/images/bee.png";
-                    },
-                  ),
-                  GestureDetector(
-                    child: Image.asset(
-                      'repo/images/cat.png',
-                      width: 80,
+                    GestureDetector(
+                      child: Image.asset(
+                        'repo/images/cat.png',
+                        width: 80,
+                      ),
+                      onTap: () {
+                        _imagePath = "repo/images/cat.png";
+                      },
                     ),
-                    onTap: () {
-                      _imagePath = "repo/images/cat.png";
-                    },
-                  ),
-                ],
+                    GestureDetector(
+                      child: Image.asset(
+                        'repo/images/fox.png',
+                        width: 80,
+                      ),
+                      onTap: () {
+                        _imagePath = "repo/images/fox.png";
+                      },
+                    ),
+                    GestureDetector(
+                      child: Image.asset(
+                        'repo/images/monkey.png',
+                        width: 80,
+                      ),
+                      onTap: () {
+                        _imagePath = "repo/images/monkey.png";
+                      },
+                    ),
+                  ],
+                ),
               ),
-              ElevatedButton(onPressed: () {}, child: Text('동물 추가하기'))
+              ElevatedButton(
+                  onPressed: () {
+                    // Animal 객체 생성
+                    var animal = Animal(
+                        animalName: nameController.value.text,
+                        kind: getKind(_radioValue),
+                        imagePath: _imagePath,
+                        flyExist: flyExist);
+
+                    // Dialog 생성
+                    AlertDialog dialog = AlertDialog(
+                      title: Text("동물 추가하기"),
+                      content: Text(
+                        '이 동물은 ${animal.animalName}'
+                        '또 동물의 종류는 ${animal.kind}입니다.\n이 동물을 추가하시겠습니까?',
+                        style: TextStyle(fontSize: 30.0),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              widget.list?.add(animal);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('예')),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('아니오')),
+                      ],
+                    );
+
+                    // Dialog 띄우기
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => dialog);
+                  },
+                  child: Text('동물 추가하기'))
             ],
           ),
         ),
