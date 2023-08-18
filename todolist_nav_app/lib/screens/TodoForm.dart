@@ -10,20 +10,33 @@ class TodoForm extends StatefulWidget {
 }
 
 class _TodoFormState extends State<TodoForm> {
+  var input = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Second Page"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("뒤로가기"),
+        appBar: AppBar(
+          title: const Text("할 일 등록"),
         ),
-      ),
-    );
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: TextField(controller: input)),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(input.text);
+                        },
+                        child: const Text("저장하기"))
+                  ],
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }

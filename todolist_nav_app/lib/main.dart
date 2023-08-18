@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist_nav_app/screens/TodoDetail.dart';
 import 'package:todolist_nav_app/screens/TodoForm.dart';
 import 'package:todolist_nav_app/screens/TodoList.dart';
 
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         '/': (context) => const TodoList(),
-        "second": (context) => const TodoForm()
+        "/form": (context) => const TodoForm(),
+        "/detail": (context) => const TodoDetail()
       },
     );
   }
