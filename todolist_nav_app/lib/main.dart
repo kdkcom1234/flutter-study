@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todolist_nav_app/screens/TodoForm.dart';
+import 'package:todolist_nav_app/screens/TodoList.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,12 +13,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TodoList with Navigation',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Scaffold(),
+      initialRoute: "/",
+      routes: {
+        '/': (context) => const TodoList(),
+        "second": (context) => const TodoForm()
+      },
     );
   }
 }
