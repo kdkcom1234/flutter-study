@@ -1,10 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist_nav_app/screens/TodoDetail.dart';
-import 'package:todolist_nav_app/screens/TodoForm.dart';
-import 'package:todolist_nav_app/screens/TodoList.dart';
+import 'package:todolist_nav_app/screens/todo_detail.dart';
+import 'package:todolist_nav_app/screens/todo_form.dart';
+import 'package:todolist_nav_app/screens/todo_list.dart';
+import 'package:todolist_nav_app/screens/todo_login.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initFirebase();
+
   runApp(const MyApp());
+}
+
+// 파이어베이스앱 초기화
+initFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
 class MyApp extends StatelessWidget {
@@ -19,9 +32,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/",
+      initialRoute: FirebaseAuth.instance.currentUser != null ? "/" : "/login",
       routes: {
         '/': (context) => const TodoList(),
+        '/login': (context) => const TodoLogin(),
         "/form": (context) => const TodoForm(),
         "/detail": (context) => const TodoDetail()
       },
