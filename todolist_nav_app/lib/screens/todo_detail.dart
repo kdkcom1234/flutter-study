@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../firebase/collections/todo_collection.dart';
+
 class TodoDetail extends StatelessWidget {
   const TodoDetail({super.key});
 
@@ -20,7 +22,9 @@ class TodoDetail extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pop(args["index"] as int);
+          removeTodoContent(args["id"] as String).then((val) {
+            Navigator.of(context).pop({"index": args["index"] as int});
+          });
         },
         child: const Icon(Icons.delete_outline),
       ),

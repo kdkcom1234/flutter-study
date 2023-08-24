@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,12 +16,17 @@ class TodoList extends StatefulWidget {
 
 class _TodoListState extends State<TodoList> {
   List<TodoContentCollection> todoList = List.empty(growable: true);
+  Timestamp? lastDocTime;
 
   getTodos() async {
-    final memos = await getTodoContents();
+    final contents = await getTodoContents(lastDocTime: lastDocTime);
+
     setState(() {
-      todoList.clear();
-      todoList.addAll(memos);
+      if (contents.isNotEmpty) {
+        lastDocTime = contents.last.createdAt;
+        todoList.clear();
+        todoList.addAll(contents);
+      }
     });
   }
 
@@ -40,7 +46,7 @@ class _TodoListState extends State<TodoList> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('할 일 목록')),
+      appBar: AppBar(title: const Text('Todo List')),
       body: Center(
           child: Column(
         children: [
@@ -59,16 +65,26 @@ class _TodoListState extends State<TodoList> {
                     final result = await Navigator.of(context)
                         .pushNamed("/detail", arguments: {
                       "memo": todoList[index].memo,
-                      "id": todoList[index].id
-                    });
+                      "id": todoList[index].id,
+                      "index": index
+                    }) as Map<String, dynamic>;
 
                     setState(() {
-                      todoList.removeAt(result as int);
+                      todoList.removeAt(index);
                     });
                   },
                 ),
               ),
               itemCount: todoList.length,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(onPressed: () {}, child: const Text("more"))
+              ],
             ),
           ),
           Padding(
@@ -95,7 +111,10 @@ class _TodoListState extends State<TodoList> {
           final result = await Navigator.of(context).pushNamed("/form")
               as Map<String, dynamic>;
           setState(() {
-            todoList.add(TodoContentCollection(result["id"], result["memo"]));
+            todoList.insert(
+                0,
+                TodoContentCollection(
+                    result["id"], result["memo"], result["createdAt"]));
           });
         },
         child: const Icon(Icons.add),

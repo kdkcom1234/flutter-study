@@ -30,11 +30,14 @@ class _TodoFormState extends State<TodoForm> {
                   children: [
                     Expanded(child: TextField(controller: input)),
                     ElevatedButton(
-                        onPressed: () async {
-                          createTodoContent(input.text).then((id) {
-                            if (id != "") {
-                              Navigator.of(context)
-                                  .pop({"id": id, "memo": input.text});
+                        onPressed: () {
+                          createTodoContent(input.text).then((doc) {
+                            if (doc != null) {
+                              Navigator.of(context).pop({
+                                "id": doc.id,
+                                "memo": doc["memo"],
+                                "createdAt": doc["createdAt"]
+                              });
                             }
                           });
                         },

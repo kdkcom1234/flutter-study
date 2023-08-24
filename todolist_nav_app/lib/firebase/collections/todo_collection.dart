@@ -7,34 +7,54 @@ import '../auth.dart';
 class TodoContentCollection {
   final String id;
   final String memo;
+  final Timestamp createdAt;
 
-  TodoContentCollection(this.id, this.memo);
+  TodoContentCollection(this.id, this.memo, this.createdAt);
 }
 
-getTodoContentRef() =>
-    FirebaseFirestore.instance.collection('todos/${getUid()}/contents');
+Future<Iterable<TodoContentCollection>> getTodoContents(
+    {Timestamp? lastDocTime}) async {
+  log(lastDocTime.toString());
 
-Future<Iterable<TodoContentCollection>> getTodoContents() async {
   final contents = await FirebaseFirestore.instance
       .collection('todos/${getUid()}/contents')
+      .orderBy("createdAt", descending: true) // id 기준 정렬(id해시: timestamp+랜덤)
+      // .startAfter([
+      //   lastDocTime ??
+      //       Timestamp.fromMillisecondsSinceEpoch(
+      //           DateTime.timestamp().millisecondsSinceEpoch)
+      // ])
+      // .limit(1)
       .get();
 
+  for (var element in contents.docs) {
+    log(element.data().toString());
+  }
+
   log(contents.docs.length.toString());
-  return contents.docs.map((e) => TodoContentCollection(e.id, e["memo"]));
+  return contents.docs
+      .map((e) => TodoContentCollection(e.id, e["memo"], e["createdAt"]));
 }
 
-Future<String> createTodoContent(String memo) async {
+Future<DocumentSnapshot<Map<String, dynamic>>?> createTodoContent(
+    String memo) async {
   final contentsRef =
       FirebaseFirestore.instance.collection('todos/${getUid()}/contents');
 
-  DocumentReference<Map<String, dynamic>> doc;
+  DocumentSnapshot<Map<String, dynamic>>? doc;
   try {
-    doc = await contentsRef.add({"memo": memo});
-    return doc.id;
+    var docRef = await contentsRef
+        .add({"memo": memo, "createdAt": FieldValue.serverTimestamp()});
+    doc = await docRef.get();
+    return doc;
   } catch (e) {
     log(e.toString());
   }
-  return "";
+  return doc;
 }
 
-removeTodoContent(String id) async {}
+Future<void> removeTodoContent(String docId) async {
+  final contentsRef =
+      FirebaseFirestore.instance.collection('todos/${getUid()}/contents');
+  await contentsRef.doc(docId).delete();
+}
