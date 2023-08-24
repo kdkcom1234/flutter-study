@@ -24,7 +24,7 @@ class _TodoListState extends State<TodoList> {
     setState(() {
       if (contents.isNotEmpty) {
         lastDocTime = contents.last.createdAt;
-        todoList.clear();
+        // todoList.clear();
         todoList.addAll(contents);
       }
     });
@@ -83,7 +83,11 @@ class _TodoListState extends State<TodoList> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(onPressed: () {}, child: const Text("more"))
+                TextButton(
+                    onPressed: () {
+                      getTodos();
+                    },
+                    child: const Text("more"))
               ],
             ),
           ),

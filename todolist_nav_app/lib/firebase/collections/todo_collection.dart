@@ -19,12 +19,12 @@ Future<Iterable<TodoContentCollection>> getTodoContents(
   final contents = await FirebaseFirestore.instance
       .collection('todos/${getUid()}/contents')
       .orderBy("createdAt", descending: true) // id 기준 정렬(id해시: timestamp+랜덤)
-      // .startAfter([
-      //   lastDocTime ??
-      //       Timestamp.fromMillisecondsSinceEpoch(
-      //           DateTime.timestamp().millisecondsSinceEpoch)
-      // ])
-      // .limit(1)
+      .startAfter([
+        lastDocTime ??
+            Timestamp.fromMillisecondsSinceEpoch(
+                DateTime.timestamp().millisecondsSinceEpoch)
+      ])
+      .limit(3)
       .get();
 
   for (var element in contents.docs) {
