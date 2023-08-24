@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/auth.dart';
+import '../firebase/auth.dart';
+import '../firebase/collections/todo_collection.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({super.key});
@@ -13,18 +14,26 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  List<String> todoList = List.empty(growable: true);
+  List<TodoContentCollection> todoList = List.empty(growable: true);
+
+  getTodos() async {
+    final memos = await getTodoContents();
+    setState(() {
+      todoList.clear();
+      todoList.addAll(memos);
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    todoList.clear();
-    todoList.add("당근 사오기");
-    todoList.add("약 사오기");
-    todoList.add("청소하기");
-    todoList.add("부모님께 전화하기");
+    if (getUid() != "") {
+      setState(() {
+        getTodos();
+      });
+    }
   }
 
   @override
@@ -42,14 +51,16 @@ class _TodoListState extends State<TodoList> {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(
-                      todoList[index],
+                      todoList[index].memo,
                       style: const TextStyle(fontSize: 30),
                     ),
                   ),
                   onTap: () async {
-                    final result = await Navigator.of(context).pushNamed(
-                        "/detail",
-                        arguments: {"data": todoList[index], "index": index});
+                    final result = await Navigator.of(context)
+                        .pushNamed("/detail", arguments: {
+                      "memo": todoList[index].memo,
+                      "id": todoList[index].id
+                    });
 
                     setState(() {
                       todoList.removeAt(result as int);
@@ -71,7 +82,9 @@ class _TodoListState extends State<TodoList> {
                           });
                     },
                     child: const Text("Log out")),
-                Text(FirebaseAuth.instance.currentUser!.email as String)
+                Text(FirebaseAuth.instance.currentUser == null
+                    ? ""
+                    : FirebaseAuth.instance.currentUser?.email as String)
               ],
             ),
           )
@@ -79,9 +92,10 @@ class _TodoListState extends State<TodoList> {
       )),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.of(context).pushNamed("/form");
+          final result = await Navigator.of(context).pushNamed("/form")
+              as Map<String, dynamic>;
           setState(() {
-            todoList.add(result as String);
+            todoList.add(TodoContentCollection(result["id"], result["memo"]));
           });
         },
         child: const Icon(Icons.add),

@@ -14,7 +14,7 @@ class TodoDetail extends StatelessWidget {
       ),
       body: Center(
         child: Text(
-          args["data"] as String,
+          args["memo"] as String,
           style: const TextStyle(fontSize: 40),
         ),
       ),

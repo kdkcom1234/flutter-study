@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../firebase/collections/todo_collection.dart';
+
 class TodoForm extends StatefulWidget {
   const TodoForm({super.key});
 
@@ -28,8 +30,13 @@ class _TodoFormState extends State<TodoForm> {
                   children: [
                     Expanded(child: TextField(controller: input)),
                     ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(input.text);
+                        onPressed: () async {
+                          createTodoContent(input.text).then((id) {
+                            if (id != "") {
+                              Navigator.of(context)
+                                  .pop({"id": id, "memo": input.text});
+                            }
+                          });
                         },
                         child: const Text("저장하기"))
                   ],

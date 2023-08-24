@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/auth.dart';
+import '../firebase/auth.dart';
 
 class TodoLogin extends StatefulWidget {
   const TodoLogin({super.key});

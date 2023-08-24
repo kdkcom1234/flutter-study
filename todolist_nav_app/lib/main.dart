@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:todolist_nav_app/screens/todo_form.dart';
 import 'package:todolist_nav_app/screens/todo_list.dart';
 import 'package:todolist_nav_app/screens/todo_login.dart';
 
+import 'firebase/auth.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,6 +21,7 @@ void main() async {
 // 파이어베이스앱 초기화
 initFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  log(FirebaseAuth.instance.currentUser.toString());
 }
 
 class MyApp extends StatelessWidget {
@@ -32,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: FirebaseAuth.instance.currentUser != null ? "/" : "/login",
+      initialRoute: getUid() == "" ? "/login" : "/",
       routes: {
         '/': (context) => const TodoList(),
         '/login': (context) => const TodoLogin(),

@@ -42,3 +42,11 @@ Future<UserCredential> signInWithGoogle(BuildContext context) async {
 Future<void> signOut() async {
   return await FirebaseAuth.instance.signOut();
 }
+
+getUid() {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    return currentUser.uid;
+  }
+  return "";
+}
