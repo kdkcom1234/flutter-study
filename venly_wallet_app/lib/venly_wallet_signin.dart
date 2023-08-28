@@ -41,7 +41,8 @@ class _VenlyWalletSigninState extends State<VenlyWalletSignin> {
       )
       ..addJavaScriptChannel("flutterHandler", onMessageReceived: (message) {
         setState(() {
-          identity = jsonDecode(message.message)["subject"];
+          final msgMap = jsonDecode(message.message);
+          identity = "${msgMap["subject"]}\n${msgMap["address"]}";
         });
       });
 
@@ -49,10 +50,10 @@ class _VenlyWalletSigninState extends State<VenlyWalletSignin> {
       appBar: AppBar(),
       body: Column(
         children: [
+          Expanded(child: WebViewWidget(controller: controller)),
           Row(
             children: [Text(identity)],
           ),
-          Expanded(child: WebViewWidget(controller: controller))
         ],
       ),
     );
